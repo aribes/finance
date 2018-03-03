@@ -25,3 +25,17 @@ def apply_regex_to_data(conn, cursor):
     for row in row_to_change:
         cursor.execute('UPDATE raw SET category = ? WHERE date = ? AND amount = ? and description = ?', (category, row[0], row[1], row[2]))
   conn.commit()
+
+def apply_custom_recurrent(conn, cursor):
+  all_raws = cursor.execute('SELECT * FROM raw')
+
+  # Orthophoniste
+  row_to_change = []
+  p = re.compile('.*ATM.*')
+  all_raws = cursor.execute('SELECT * FROM raw')
+  for row in all_raws:
+    if p.match(row[2]) and row[1] == -140.0:
+      row_to_change.append(row)
+  for row in row_to_change:
+      cursor.execute('UPDATE raw SET category = ? WHERE date = ? AND amount = ? and description = ?', ('Orthophoniste', row[0], row[1], row[2]))
+  conn.commit()
