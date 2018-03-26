@@ -4,7 +4,7 @@
 # TODO - Replace category table
 # TODO - Cash debit table
 # TODO - Parsing User
-# TODO - Review mois par category - mode review regex
+# TODO - Keep date - refactor
 
 import sys
 import re
@@ -30,6 +30,9 @@ parser.add_argument("--regex_category", help="New Regex Category")
 parser.add_argument("--regex_definition", help="New Regex Definition")
 parser.add_argument("--stats", help="Compute and Show statistics", action="store_true")
 parser.add_argument("--date", help="Select a specific date")
+parser.add_argument("--display_categories", help="Display categories", action="store_true")
+parser.add_argument("--display_category", help="Display category")
+parser.add_argument("--list_categories", help="List Categories", action="store_true")
 
 args = parser.parse_args()
 
@@ -67,7 +70,7 @@ if args.test_regex and args.regex_category and args.regex_definition:
       print(row)
 
 if args.apply_regex and args.regex_category and args.regex_definition:
-  print("Applying regex cat:", args.regex_category, " def:", args.regex_definition)
+  print("Applying and adding regex cat:", args.regex_category, " def:", args.regex_definition)
   p = re.compile(args.regex_definition)
   result = c.execute('SELECT * FROM raw')
   row_to_change = []
@@ -82,32 +85,7 @@ if args.apply_regex and args.regex_category and args.regex_definition:
   c.execute('INSERT INTO regex VALUES (?,?)', (args.regex_definition, args.regex_category))
   conn.commit()
 
-wanted_year  = None
-wanted_month = None
-wanted_day   = None
-if args.date:
-  try:
-    extracted_date = datetime.strptime(args.date, '%Y%m%d')
-  except ValueError:
-    try:
-      extracted_date = datetime.strptime(args.date, '%Y%m')
-    except ValueError:
-      try:
-        extracted_date = datetime.strptime(args.date, '%Y')
-      except ValueError:
-        print("Unknown date, please use: 2018, 201801 or 20180101")
-        sys.exit(1)
-        pass
-      else:
-        wanted_year  = extracted_date.strftime('%Y')
-    else:
-      wanted_year  = extracted_date.strftime('%Y')
-      wanted_month = extracted_date.strftime('%m')
-  else:
-    wanted_year  = extracted_date.strftime('%Y')
-    wanted_month = extracted_date.strftime('%m')
-    wanted_day   = extracted_date.strftime('%d')
-
+wanted_year, wanted_month, wanted_day = utils.compute_date(args.date)
 if wanted_year:
   print("Wanted date is:", wanted_year, " ", wanted_month, " ", wanted_day)
 
@@ -120,5 +98,11 @@ if args.apply_custom:
 
 if args.stats:
   utils.compute_statistics(conn, c, wanted_year, wanted_month, wanted_day)
+
+if args.list_categories:
+  utils.list_cats(conn, c, wanted_year, wanted_month, wanted_day)
+
+if args.display_categories or args.display_category:
+  utils.display_cats(conn, c, wanted_year, wanted_month, wanted_day, args.display_category)
 
 conn.close()
