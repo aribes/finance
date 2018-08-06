@@ -6,7 +6,7 @@ cfg = utils_cfg.cfg
 
 def apply_regexes_to_data():
 
-  regexes = utils.get_regexes(cfg.db_cursor)
+  regexes = utils.get_regexes()
   for regex in regexes:
     re_def   = regex[0]
     category = regex[1]
@@ -28,14 +28,34 @@ def apply_regexes_to_data():
 
   cfg.db_connection.commit()
 
-def apply_custom_regex(conn, cursor):
+def apply_custom_regex():
+
   # Orthophoniste
   row_to_change = []
   p = re.compile('.*ATM.*')
-  all_raws = cursor.execute('SELECT * FROM raw')
-  for row in all_raws:
+  all_rows = cfg.db_cursor.execute('SELECT * FROM raw')
+  for row in all_rows:
     if p.match(row[2]) and row[1] == -140.0:
       row_to_change.append(row)
   for row in row_to_change:
-      cursor.execute('UPDATE raw SET category = ? WHERE date = ? AND amount = ? and description = ?', ('Orthophoniste', row[0], row[1], row[2]))
-  conn.commit()
+      cfg.db_cursor.execute('UPDATE raw SET category = ? WHERE date = ? AND amount = ? and description = ?', ('Orthophoniste', row[0], row[1], row[2]))
+  cfg.db_connection.commit()
+
+def run_regex(regex, category, apply):
+  p = re.compile('.*ATM.*')
+  all_rows = cfg.db_cursor.execute('SELECT * FROM raw')
+  row_to_change = []
+  for row in all_rows:
+    if p.match(row[2]):
+      row_to_change.append(row)
+      if not apply: print(row)
+  if not apply: return
+
+  # Applying regex to rows
+  for row in row_to_change:
+      cfg.db_cursor.execute('UPDATE raw SET category = ? WHERE date = ? AND amount = ? and description = ?', (args.regex_category, row[0], row[1], row[2]))
+  cfg.db_connection.commit()
+
+  # Adding regex to database
+  cfg.db_cursor.execute('INSERT INTO regex VALUES (?,?)', (regex, category))
+  cfg.db_connection.commit()

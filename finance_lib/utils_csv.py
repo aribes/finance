@@ -26,10 +26,3 @@ def import_csv_file(filename, version=''):
     return pd
 
   sys.exit('Unknow format {}'.format(version))
-
-def add_csv_to_db(pd):
-  for _, row in pd.iterrows():
-    str_format = '%Y-%m-%d'
-    data = (datetime.strptime(row.date, '%d/%m/%Y').strftime(str_format), row.amount, row.description, row.acc_amount, row.bank_category)
-    cfg.db_cursor.execute('INSERT INTO raw VALUES (?,?,?,?,?, "unknown", "unknown")', data)
-  cfg.db_connection.commit()

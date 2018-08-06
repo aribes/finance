@@ -3,12 +3,12 @@ from . import utils
 def nicePrt(x):
   print('[',x.date,'] ', x.description, ' (', x.amount, ')')
 
-def show_categories(cursor):
+def show_categories():
   categories = utils.get_categories()
   for cat in categories:
     print(cat)
 
-def show_categories_content(cursor):
+def show_categories_content():
   show_category_content(None)
 
 def show_category_content(category):
