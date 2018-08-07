@@ -1,0 +1,4 @@
+copy-test.db
+test.db
+__pycache__/*
+data/*
