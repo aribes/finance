@@ -6,10 +6,10 @@ import sys
 import re
 import argparse
 import pandas
-import sqlite3
+import logging
 
-from finance_lib import *
-cfg = utils_cfg.cfg
+import finance_lib as fl
+cfg = fl.utils_cfg.cfg
 
 parser = argparse.ArgumentParser()
 # Basic arguments
@@ -35,52 +35,61 @@ parser.add_argument("--display_category", help="Display category")
 parser.add_argument("--list_categories", help="List Categories", action="store_true")
 
 args = parser.parse_args()
-
-# Init DB
-if args.db:
-  db_filename = args.db
-else:
-  db_filename = "test.db"
-cfg.db_connection = sqlite3.connect(db_filename)
-cfg.db_cursor = cfg.db_connection.cursor()
+log = logging.Logger()
 
 # Parser Date
 cfg.load_date(args.date)
 if cfg.wanted_year:
-  print("Selected date Y:{0} M:{1} D:{2}".format(cfg.wanted_year, cfg.wanted_month, cfg.wanted_day))
+  log.info("Selected date Y:{} M:{} D:{}".format(cfg.wanted_year, cfg.wanted_month, cfg.wanted_day))
 
-if args.add_csv:
-  print('Adding CSV file to the database:', args.add_csv)
-  pd = utils_csv.import_csv_file(args.add_csv, args.csv_version)
-  utils_csv.add_pd_to_db(pd)
-  utils_regex.apply_regexes_to_data()
-  utils_regex.apply_custom_regex()
+# Load / Init load DB
+db_filename = "test.db"
+if args.db:
+  db_filename = args.db
 
-if args.test_regex and args.regex_category and args.regex_definition:
-  print("Testing regex cat:", args.regex_category, " def:", args.regex_definition)
-  utils_regex.run_regex(args.regex_definition, args.regex_category, apply=False)
+db_mgt = fl.db.db_manager(db_filename)
+data = db_mgt.get_data()
 
-if args.apply_regex and args.regex_category and args.regex_definition:
-  print("Applying and adding regex cat:", args.regex_category, " def:", args.regex_definition)
-  utils_regex.run_regex(args.regex_definition, args.regex_category, apply=True)
+update_data(args)
+display_data(args)
 
-if args.apply_regexes:
-  utils_regex.apply_regexes_to_data()
-  utils_regex.apply_custom_regex()
+db_mgt.save_data(data)
+db_mgt.disconnect()
 
-if args.apply_custom:
-  utils_regex.apply_custom_regex()
+def update_data(args):
+  if args.add_csv:
+    log.info('Adding CSV file to the database: {}'.format(args.add_csv))
+    pd = utils_csv.import_csv_file(args.add_csv, args.csv_version)
+    utils_csv.add_pd_to_db(pd)
+    utils_regex.apply_regexes_to_data()
+    utils_regex.apply_custom_regex()
 
-if args.stats:
-  utils_term_ouput.show_statistics()
+  if args.test_regex and args.regex_category and args.regex_definition:
+    log.info("Testing regex cat: {} - def: {}".format(args.regex_category, args.regex_definition)
+    utils_regex.run_regex(args.regex_definition, args.regex_category, apply=False)
 
-if args.list_categories:
-  utils_term_ouput.show_categories()
+  if args.apply_regex and args.regex_category and args.regex_definition:
+    log.info("Applying and adding regex cat: {} - def: {}".format(args.regex_category, args.regex_definition)
+    utils_regex.run_regex(args.regex_definition, args.regex_category, apply=True)
 
-if args.display_categories:
-  utils_term_ouput.show_categories_content()
+  if args.apply_regexes:
+    utils_regex.apply_regexes_to_data()
+    utils_regex.apply_custom_regex()
 
-if args.display_category:
-  utils_term_ouput.show_category_content(args.display_category)
+  if args.apply_custom:
+    utils_regex.apply_custom_regex()
 
-cfg.db_connection.close()
+def display_data(args):
+
+  # TODO - Filter data
+  if args.stats:
+    utils_term_ouput.show_statistics()
+
+  if args.list_categories:
+    utils_term_ouput.show_categories()
+
+  if args.display_categories:
+    utils_term_ouput.show_categories_content()
+
+  if args.display_category:
+    utils_term_ouput.show_category_content(args.display_category)

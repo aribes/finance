@@ -1,17 +1,21 @@
-from . import utils
+import logging
+
+from . import calc
+
+log = logging.Logger()
 
 def nicePrt(x):
-  print('[',x.date,'] ', x.description, ' (', x.amount, ')')
+  log.info('[{}] {} ({})'.format(x.date, x.description, x.amount))
 
-def show_categories():
-  categories = utils.get_categories()
-  for cat in categories:
-    print(cat)
+def show_tags(data):
+  tags = calc.get_tags(data)
+  for tag in tags:
+    log.info('Tag: {}'.format(tag))
 
-def show_categories_content():
-  show_category_content(None)
+def show_tags_content():
+  show_tag_content(None)
 
-def show_category_content(category):
+def show_tag_content(tag):
   df = utils.get_data()
   groups = df.groupby(['category'])
   for name, group in groups:

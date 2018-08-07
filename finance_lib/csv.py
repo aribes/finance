@@ -2,9 +2,6 @@ from datetime import datetime
 import pandas
 import sys
 
-from . import utils_cfg
-cfg = utils_cfg.cfg
-
 def import_csv_file(filename, version=''):
 
   # Main format of CBA from savings account

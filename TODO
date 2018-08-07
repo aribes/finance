@@ -1,0 +1,8 @@
+
+Tag Management:
+  ☐ Avoir une col tags
+  ☐ Lors du chargement decoder chaque pour avoir une liste complete de tags
+  ☐ Creer les cols avec False
+  ☐ Puis parser les str avec contains r''
+  ☐ retourner liste des tags
+  ☐ a chaque nouveau regex on update la column tags bien entendu
