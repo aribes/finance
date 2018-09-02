@@ -1,3 +1,10 @@
+DB management:
+  ☐ Ini or Yml configuration file
+  ☐ Switch to sqlachemy
+  ☐ Use pandas / sqlalchemy and remove all sql commands
+  ☐ Being to track how many entries changed between two commits
+  ☐ Automatic saving of the tables in another DB for incident recoveries
+    ☐ For instance table names with dates and keep the last X defined in the configuration file
 
 Tag Management:
   ☐ Avoir une col tags
@@ -6,3 +13,11 @@ Tag Management:
   ☐ Puis parser les str avec contains r''
   ☐ retourner liste des tags
   ☐ a chaque nouveau regex on update la column tags bien entendu
+
+Ideas / Principles:
+  ☐ Regexes can match one or more cols to define a tag
+  ☐ A user can set for a specific line a specific tag
+    ☐ Even if this could also be expressed in the regex table, we will put them in another
+  ☐ We should be always able to recreate the data by using:
+    ☐ The regex table
+    ☐ The custom table
