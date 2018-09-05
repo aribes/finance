@@ -1,10 +1,11 @@
 DB management:
   ☐ Ini or Yml configuration file
-  ☐ Switch to sqlachemy
-  ☐ Use pandas / sqlalchemy and remove all sql commands
+  ✔ Switch to sqlachemy @done(18-09-05 22:08)
+  ✔ Use pandas / sqlalchemy and remove all sql commands @done(18-09-05 22:08)
   ☐ Being to track how many entries changed between two commits
   ☐ Automatic saving of the tables in another DB for incident recoveries
     ☐ For instance table names with dates and keep the last X defined in the configuration file
+  ☐ Initialisation: if the table exists, check that the columns are in the right types
 
 Tag Management:
   ☐ Avoir une col tags
