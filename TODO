@@ -1,5 +1,5 @@
 DB management:
-  ☐ Ini or Yml configuration file
+  ✔ Ini or Yml configuration file @done(18-09-05 22:53)
   ✔ Switch to sqlachemy @done(18-09-05 22:08)
   ✔ Use pandas / sqlalchemy and remove all sql commands @done(18-09-05 22:08)
   ☐ Being to track how many entries changed between two commits
@@ -8,7 +8,7 @@ DB management:
   ☐ Initialisation: if the table exists, check that the columns are in the right types
 
 Tag Management:
-  ☐ Avoir une col tags
+  ✔ Avoir une col tags @done(18-09-05 22:54)
   ☐ Lors du chargement decoder chaque pour avoir une liste complete de tags
   ☐ Creer les cols avec False
   ☐ Puis parser les str avec contains r''
