@@ -14,8 +14,15 @@ regexes = db_manager.get_regexes()
 
 # Starting Flask Server
 from flask import Flask
+from flask import jsonify
+from flask_cors import CORS
 app = Flask(__name__)
+CORS(app)
 
+state = 0
 @app.route('/')
 def hello_world():
-    return 'Welcome to finance server'
+    global state
+    rtn_str = 'Welcome to finance server - test number {}'.format(state)
+    state += 1
+    return jsonify(rtn_str)
