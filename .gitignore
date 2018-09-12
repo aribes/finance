@@ -2,4 +2,5 @@ copy-test.db
 test.db
 finance_lib/__pycache__/*
 __pycache__/*
+*/__pycache__/*
 data/*
