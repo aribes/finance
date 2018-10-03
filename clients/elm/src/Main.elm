@@ -9,7 +9,8 @@ import Json.Encode as Encode
 import Common exposing (..)
 import LoadCsv
 
--- MAIN
+import Element
+import Element.Font as Font
 
 main =
   Browser.element
@@ -19,7 +20,7 @@ main =
     , view = view
     }
 
--- INIT
+-- Rmk - could call a specific method in Common
 init : () -> (Model, Cmd Msg)
 init _ =
   ( Model "" "" ""
@@ -54,9 +55,10 @@ subscriptions model =
 -- VIEW
 view : Model -> Html Msg
 view model =
-  div []
-    [ h2 [] [ text "Welcome to finance UI"]
-    , h3 [] [ text "All the features can be selected on the left sidebar"]
-    , p [] [text ("LastAppError: " ++ model.lastAppError)]
-    , p [] [text ("LastSrvMsg: " ++ model.lastAppError)]
+  Element.layout []
+    <| Element.column [] [
+       (Element.row [] [Element.el [Font.size 32] (Element.text "Welcome to finance UI")])
+      ,(Element.row [] [Element.el [Font.size 24] (Element.text "All the features can be selected on the left sidebar")])
+      ,(Element.row [] [Element.el [Font.size 14] (Element.text ("LastAppError: " ++ model.lastAppError))])
+      ,(Element.row [] [Element.el [Font.size 14] (Element.text ("LastSrvMsg: " ++ model.lastSrvMsg))])
     ]

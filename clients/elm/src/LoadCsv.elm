@@ -20,7 +20,6 @@ update msg model =
       ( model
       , sendRawDataFile model
       )
-
     RawDataFileLoading result ->
       case result of
         Ok srv_msg ->
