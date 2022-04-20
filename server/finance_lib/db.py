@@ -11,11 +11,10 @@ import re
 
 class db_manager:
 
-
   def __init__(self, db_url):
     self.log = logging.getLogger()
-    self.db_url = db_url
-    self.db = sqlalchemy.create_engine(self.db_url)
+    self.db_url = 'sqlite:///' + db_url
+    self.engine = sqlalchemy.create_engine(self.db_url)
     self.init_db()
 
   def init_db(self):
@@ -24,14 +23,14 @@ class db_manager:
       file with the desired columns and write into the database
     """
 
-    if not self.db.dialect.has_table(self.db, 'data'):
+    if not sqlalchemy.inspect(self.engine).has_table('data'):
       empty_df = pandas.DataFrame(columns=['date', 'amount', 'acc_amount', 'description', 'bank_category', 'username', 'tags'])
       empty_df = empty_df.astype({'date' : 'datetime64[ns]', 'amount': numpy.float64, 'acc_amount': numpy.float64})
-      empty_df.to_sql('data', self.db)
+      empty_df.to_sql('data', self.engine, index = False)
 
-    if not self.db.dialect.has_table(self.db, 'regexes'):
+    if not sqlalchemy.inspect(self.engine).has_table('regexes'):
       empty_df = pandas.DataFrame(columns=['re_date', 're_amount', 're_acc_amount', 're_description', 're_bank_category', 're_username', 'tags'])
-      empty_df.to_sql('regexes', self.db)
+      empty_df.to_sql('regexes', self.engine, index = False)
 
   def get_data(self):
     self.log.info('Loading data from database')
@@ -39,7 +38,7 @@ class db_manager:
 
   def save_data(self, data):
     self.log.info('Saving data to database')
-    data.to_sql('data', self.db, if_exists='replace')
+    data.to_sql('data', self.engine, if_exists='replace')
     self.log.info('Done!')
 
   def get_regexes(self):
@@ -48,5 +47,5 @@ class db_manager:
 
   def save_regexes(self, regexes):
     self.log.info('Saving regexes to database')
-    data.to_sql('regexes', self.db, if_exists='replace')
+    regexes.to_sql('regexes', self.engine, if_exists='replace')
     self.log.info('Done!')

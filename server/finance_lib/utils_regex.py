@@ -4,7 +4,7 @@ from . import utils
 from . import utils_cfg
 cfg = utils_cfg.cfg
 
-def apply_regexes_to_data(data, regexes):
+def apply_regexes_to_data():
 
   regexes = utils.get_regexes()
   for regex in regexes:
@@ -14,7 +14,7 @@ def apply_regexes_to_data(data, regexes):
     print('Running regex: {0} for category: {1}'.format(re_def, category))
 
     # Get All Raws
-    all_rows = cfg.db_cursor.execute('SELECT * FROM raw')
+    all_rows = cfg.db_connection.execute('SELECT * FROM data')
 
     # Find rows to change
     rows_to_change = []
@@ -24,13 +24,23 @@ def apply_regexes_to_data(data, regexes):
 
     # Change categories to selected rows
     for row in rows_to_change:
-        cfg.db_cursor.execute('UPDATE raw SET category = ? WHERE date = ? AND amount = ? and description = ?', (category, row[0], row[1], row[2]))
+        cfg.db_connection.execute('UPDATE raw SET category = ? WHERE date = ? AND amount = ? and description = ?', (category, row[0], row[1], row[2]))
 
-  cfg.db_connection.commit()
+def apply_custom_regex():
+
+  # Orthophoniste
+  row_to_change = []
+  p = re.compile('.*ATM.*')
+  all_rows = cfg.db_connection.execute('SELECT * FROM data')
+  for row in all_rows:
+    if p.match(row[2]) and row[1] == -140.0:
+      row_to_change.append(row)
+  for row in row_to_change:
+      cfg.db_connection.execute('UPDATE data SET category = ? WHERE date = ? AND amount = ? and description = ?', ('Orthophoniste', row[0], row[1], row[2]))
 
 def run_regex(regex, category, apply):
   p = re.compile('.*ATM.*')
-  all_rows = cfg.db_cursor.execute('SELECT * FROM raw')
+  all_rows = cfg.db_cursor.execute('SELECT * FROM data')
   row_to_change = []
   for row in all_rows:
     if p.match(row[2]):
@@ -40,9 +50,7 @@ def run_regex(regex, category, apply):
 
   # Applying regex to rows
   for row in row_to_change:
-      cfg.db_cursor.execute('UPDATE raw SET category = ? WHERE date = ? AND amount = ? and description = ?', (args.regex_category, row[0], row[1], row[2]))
-  cfg.db_connection.commit()
+      cfg.db_cursor.execute('UPDATE data SET category = ? WHERE date = ? AND amount = ? and description = ?', (args.regex_category, row[0], row[1], row[2]))
 
   # Adding regex to database
-  cfg.db_cursor.execute('INSERT INTO regex VALUES (?,?)', (regex, category))
-  cfg.db_connection.commit()
+  cfg.db_cursor.execute('INSERT INTO regexes VALUES (?,?)', (regex, category))

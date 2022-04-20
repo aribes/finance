@@ -56,7 +56,7 @@ subscriptions model =
 view : Model -> Html Msg
 view model =
   Element.layout []
-    <| Element.column [] [
+    <| Element.column [Element.spacing 20] [
        (Element.row [] [Element.el [Font.size 32] (Element.text "Welcome to finance UI")])
       ,(Element.row [] [Element.el [Font.size 24] (Element.text "All the features can be selected on the left sidebar")])
       ,(Element.row [] [Element.el [Font.size 14] (Element.text ("LastAppError: " ++ model.lastAppError))])
