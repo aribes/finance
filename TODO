@@ -15,7 +15,8 @@ Tag Management:
   ☐ retourner liste des tags
   ☐ a chaque nouveau regex on update la column tags bien entendu
 
-Ideas / Principles:
+Ideas / Principles
+[] Update Regex
   ☐ Regexes can match one or more cols to define a tag
   ☐ A user can set for a specific line a specific tag
     ☐ Even if this could also be expressed in the regex table, we will put them in another

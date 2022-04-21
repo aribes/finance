@@ -18,7 +18,7 @@ def get_regexes():
 
 def get_data():
   all_raws = cfg.db_connection.execute('SELECT * FROM data')
-  df = pandas.DataFrame(all_raws.fetchall(), columns=['date', 'amount', 'description', 'acc_amount', 'bank_category', 'username', 'category'])
+  df = pandas.DataFrame(all_raws.fetchall(), columns=['date', 'amount', 'acc_amount', 'description', 'bank_category', 'username', 'category'])
   return cfg.filter(df)
 
 def get_categories():
@@ -39,16 +39,12 @@ def get_statistics():
     credit  = group[group.amount > 0.0].amount.sum()
     debit   = group[group.amount <= 0.0].amount.sum()
     restant = credit + debit
-    debit_proj = -9400 + group[group.category != 'Loyer'][group.amount <= 0.0].amount.sum()
-    restant_projection = credit + debit_proj
     statistics.append({
        'date': name
       ,'category_amount': data_per_category
       ,'credit': credit
       ,'debit': debit
       ,'restant':restant
-      ,'debit_proj': debit_proj
-      ,'restant_proj': restant_projection
       ,'df': group
     })
 

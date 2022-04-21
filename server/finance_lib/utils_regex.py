@@ -9,9 +9,9 @@ def apply_regexes_to_data():
   regexes = utils.get_regexes()
   for regex in regexes:
     re_def   = regex[0]
-    category = regex[1]
+    tag      = regex[1]
     p = re.compile(re_def)
-    print('Running regex: {0} for category: {1}'.format(re_def, category))
+    print('Running regex: {0} for tag: {1}'.format(re_def, tag))
 
     # Get All Raws
     all_rows = cfg.db_connection.execute('SELECT * FROM data')
@@ -19,12 +19,12 @@ def apply_regexes_to_data():
     # Find rows to change
     rows_to_change = []
     for row in all_rows:
-      if p.match(row[2]):
+      if p.match(row[3]):
         rows_to_change.append(row)
 
     # Change categories to selected rows
     for row in rows_to_change:
-        cfg.db_connection.execute('UPDATE raw SET category = ? WHERE date = ? AND amount = ? and description = ?', (category, row[0], row[1], row[2]))
+        cfg.db_connection.execute('UPDATE data SET tags = ? WHERE date = ? AND amount = ? and description = ?', (tag, row[0], row[1], row[2]))
 
 def apply_custom_regex():
 

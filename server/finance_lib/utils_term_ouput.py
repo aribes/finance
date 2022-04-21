@@ -36,5 +36,4 @@ def show_statistics():
     print('Debit:',   month_stats['debit'])
     print('Restant:', month_stats['restant'])
     print()
-    print('Restant Projection:', month_stats['restant_proj'])
     print('----------------')
