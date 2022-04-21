@@ -18,6 +18,9 @@ if args.db:
 
 db_mgt = fl.db.db_manager(db_filename)
 cfg.db_connection = db_mgt.engine.connect()
+cfg.data_table = db_mgt.data_table
+cfg.regexes_table = db_mgt.regexes_table
+cfg.session = db_mgt.session
 
 update_data(args)
 display_data(args)

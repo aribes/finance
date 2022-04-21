@@ -33,7 +33,7 @@ def apply_custom_regex():
   p = re.compile('.*ATM.*')
   all_rows = cfg.db_connection.execute('SELECT * FROM data')
   for row in all_rows:
-    if p.match(row[2]) and row[1] == -140.0:
+    if p.match(row[3]) and row[1] == -140.0:
       row_to_change.append(row)
   for row in row_to_change:
       cfg.db_connection.execute('UPDATE data SET category = ? WHERE date = ? AND amount = ? and description = ?', ('Orthophoniste', row[0], row[1], row[2]))
@@ -43,7 +43,7 @@ def run_regex(regex, category, apply):
   all_rows = cfg.db_cursor.execute('SELECT * FROM data')
   row_to_change = []
   for row in all_rows:
-    if p.match(row[2]):
+    if p.match(row[3]):
       row_to_change.append(row)
       if not apply: print(row)
   if not apply: return

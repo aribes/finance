@@ -37,12 +37,11 @@ def import_csv_file(filename, version=''):
       'Transaction Description': 'description',
       'Amount': 'amount',
       'Balance': 'acc_amount'})
-    print (pd.dtypes)
     pd = pd.astype({
        'description': str,
        'amount': float,
        'acc_amount': float})
-    pd['date'] = pandas.to_datetime(pd['date'])
+    pd['date'] = pandas.to_datetime(pd['date'], format='%d/%m/%Y')
     pd['bank_category'] = ''
     return pd
   
@@ -50,15 +49,21 @@ def import_csv_file(filename, version=''):
 
 def add_pd_to_db(pd):
   for _, row in pd.iterrows():
+    
+    # TODO - Move that somewhere else
     str_format = '%Y-%m-%d'
-    data = (row.date.strftime(str_format), row.amount, row.description, row.acc_amount, row.bank_category)
-
-    # Get SQLAlchemy Table
-    # Insert only if does not exists from the data object 
-    sel = select([literal("1"), literal("John")]).where(
-           ~exists([example_table.c.id]).where(example_table.c.id == 1)
-      )
-
-ins = example_table.insert().from_select(["id", "name"], sel)
-print(ins)
-    cfg.db_connection.execute('INSERT INTO data VALUES (?,?,?,?,?, "unknown", "unknown")', data)
+    data = (row.date.strftime(str_format), row.amount, row.acc_amount, row.description, row.bank_category)
+    
+    filtered =  cfg.session.query(cfg.data_table).filter_by(
+      date = data[0],
+      amount = data[1],
+      acc_amount = data[2],
+      description = data[3]).first()
+    
+   
+    if filtered is None:
+      print ("Adding new data in the database", data)
+      cfg.db_connection.execute('INSERT INTO data VALUES (?,?,?,?,?, "", "")', data)
+    else:
+      print ("Data already found in the database", data)
+    

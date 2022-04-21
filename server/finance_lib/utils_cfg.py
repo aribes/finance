@@ -8,7 +8,9 @@ class config:
     self.wanted_month  = None
     self.wanted_day    = None
     self.db_connection = None   
-    self.db_cursor     = None
+    self.data_table    = None
+    self.regexes_table = None
+    self.session       = None
 
   def load_date(self, date_str):
     if not date_str:

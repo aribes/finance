@@ -1,6 +1,4 @@
-copy-test.db
-test.db
-finance_lib/__pycache__/*
-__pycache__/*
-*/__pycache__/*
-data/*
+*.pyc
+*.db
+__pycache__/
+bank_data/
