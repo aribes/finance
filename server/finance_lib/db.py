@@ -36,7 +36,7 @@ class db_manager:
       empty_df.to_sql('data', self.engine, index = False)
 
     if not sqlalchemy.inspect(self.engine).has_table('regexes'):
-      empty_df = pandas.DataFrame(columns=['re_date', 're_amount', 're_acc_amount', 're_description', 're_bank_category', 're_username', 'tags'])
+      empty_df = pandas.DataFrame(columns=['regex', 'tag'])
       empty_df.to_sql('regexes', self.engine, index = False)
   
   def get_db_tables(self):

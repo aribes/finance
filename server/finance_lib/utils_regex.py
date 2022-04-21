@@ -38,9 +38,9 @@ def apply_custom_regex():
   for row in row_to_change:
       cfg.db_connection.execute('UPDATE data SET category = ? WHERE date = ? AND amount = ? and description = ?', ('Orthophoniste', row[0], row[1], row[2]))
 
-def run_regex(regex, category, apply):
-  p = re.compile('.*ATM.*')
-  all_rows = cfg.db_cursor.execute('SELECT * FROM data')
+def run_regex(regex, tag, apply):
+  p = re.compile(regex)
+  all_rows = cfg.db_connection.execute('SELECT * FROM data')
   row_to_change = []
   for row in all_rows:
     if p.match(row[3]):
@@ -50,7 +50,7 @@ def run_regex(regex, category, apply):
 
   # Applying regex to rows
   for row in row_to_change:
-      cfg.db_cursor.execute('UPDATE data SET category = ? WHERE date = ? AND amount = ? and description = ?', (args.regex_category, row[0], row[1], row[2]))
+      cfg.db_connection.execute('UPDATE data SET tags = ? WHERE date = ? AND amount = ? and description = ?', (tag, row[0], row[1], row[3]))
 
   # Adding regex to database
-  cfg.db_cursor.execute('INSERT INTO regexes VALUES (?,?)', (regex, category))
+  cfg.db_connection.execute('INSERT INTO regexes VALUES (?,?)', (regex, tag))

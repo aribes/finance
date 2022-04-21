@@ -44,6 +44,10 @@ def update_data(args):
     utils_regex.apply_regexes_to_data()
     utils_regex.apply_custom_regex()
 
+  print(args.test_regex)
+  print(args.regex_category)
+  print(args.regex_definition)
+
   if args.test_regex and args.regex_category and args.regex_definition:
     logging.info("Testing regex cat: {} - def: {}".format(args.regex_category, args.regex_definition))
     utils_regex.run_regex(args.regex_definition, args.regex_category, apply=False)
