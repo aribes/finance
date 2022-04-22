@@ -3,6 +3,7 @@
 from client_functions import *
 import finance_lib as fl
 
+
 args = init_arg_parser().parse_args()
 cfg = fl.utils_cfg.cfg
 
@@ -16,7 +17,11 @@ db_filename = "bank_australia.db"
 if args.db:
   db_filename = args.db
 
-db_mgt = fl.db.db_manager(db_filename)
+# Using Sqlite by default
+database_url = 'sqlite:///' + db_filename
+
+db_mgt = fl.db.db_manager(database_url)
+db_mgt_new = fl.db_manager.DatabaseManager(database_url + '_new')
 cfg.db_connection = db_mgt.engine.connect()
 cfg.data_table = db_mgt.data_table
 cfg.regexes_table = db_mgt.regexes_table

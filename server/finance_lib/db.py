@@ -14,8 +14,7 @@ class db_manager:
 
   def __init__(self, db_url):
     self.log = logging.getLogger()
-    self.db_url = 'sqlite:///' + db_url
-    self.engine = sqlalchemy.create_engine(self.db_url)
+    self.engine = sqlalchemy.create_engine(db_url)
     self.data_table = None
     self.regexes_table = None
     self.init_db()
