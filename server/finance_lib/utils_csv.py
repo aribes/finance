@@ -48,6 +48,8 @@ def import_csv_file(filename, version=''):
   sys.exit('Unknow format {}'.format(version))
 
 def add_pd_to_db(pd):
+  
+  # Not the greatest way to use pandas... but we need to check that the record is not already in the database
   for _, row in pd.iterrows():
     
     # TODO - Move that somewhere else

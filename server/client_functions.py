@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 
-from datetime import datetime
-import os
-import sys
-import re
 import argparse
-import pandas
 import logging
 
 from finance_lib import *
+from finance_lib import config
+from finance_lib import csv
+
 
 def init_arg_parser():
+
   parser = argparse.ArgumentParser()
+  
   # Basic arguments
   parser.add_argument("--db", help="Select db file")
   parser.add_argument("--date", help="Select a specific filter date")
@@ -36,13 +36,14 @@ def init_arg_parser():
 
   return parser
 
-def update_data(args):
+
+# TODO - We need to apply a filter from dates provided by the user
+def process_args(args):
+  
   if args.add_csv:
     logging.info('Adding CSV file to the database: {}'.format(args.add_csv))
     pd = utils_csv.import_csv_file(args.add_csv, args.csv_version)
     utils_csv.add_pd_to_db(pd)
-    utils_regex.apply_regexes_to_data()
-    utils_regex.apply_custom_regex()
 
   if args.test_regex and args.regex_category and args.regex_definition:
     logging.info("Testing regex cat: {} - def: {}".format(args.regex_category, args.regex_definition))
@@ -58,8 +59,6 @@ def update_data(args):
   if args.apply_custom:
     utils_regex.apply_custom_regex()
 
-def display_data(args):
-  # TODO - Filter data
   if args.stats:
     utils_term_ouput.show_statistics()
 
@@ -71,3 +70,14 @@ def display_data(args):
 
   if args.display_category:
     utils_term_ouput.show_category_content(args.display_category)
+
+
+def run(args):
+
+  if args.add_csv:
+    config.c.logger.info('Adding CSV file to the database: {}'.format(args.add_csv))
+    df = csv.import_bank_records_from_csv(args.add_csv)
+    if df is not None:
+      config.c.db_manager.add_bank_records(df)
+    else:
+      return
