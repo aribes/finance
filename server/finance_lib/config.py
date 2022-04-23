@@ -1,4 +1,5 @@
 import logging
+import yaml
 
 
 class config:
@@ -13,6 +14,12 @@ class config:
     def init_logging(self):
         self.logger = logging.getLogger("App")
         self.logger.setLevel(logging.DEBUG)
+
+    def load_config_file(self, config_file):
+        with open(config_file) as f:
+            user_configs = yaml.load(f, Loader=yaml.FullLoader)
+            print(user_configs)
+        pass
 
 
 c = config()

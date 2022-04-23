@@ -7,6 +7,7 @@ import finance_lib as fl
 args = init_arg_parser().parse_args()
 cfg = fl.utils_cfg.cfg
 
+
 # Parser Date
 # cfg.load_date(args.date)
 # if cfg.wanted_year:
@@ -30,4 +31,10 @@ process_args(args)
 
 fl.config.c.logger.info("Starting ORM version")
 fl.config.c.db_manager = fl.db_manager.DatabaseManager(database_url + '_new')
+
+# TODO - To put in args
+# TODO - Use agnostic path system
+configuration_file = '../config/categories.yaml'
+fl.config.c.load_config_file(configuration_file)
+
 run(args)
