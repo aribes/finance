@@ -21,16 +21,15 @@ if args.db:
 # Using Sqlite by default
 database_url = 'sqlite:///' + db_filename
 
-db_mgt = fl.db.db_manager(database_url)
-cfg.db_connection = db_mgt.engine.connect()
-cfg.data_table = db_mgt.data_table
-cfg.regexes_table = db_mgt.regexes_table
-cfg.session = db_mgt.session
-
-process_args(args)
+#db_mgt = fl.db.db_manager(database_url)
+#cfg.db_connection = db_mgt.engine.connect()
+#cfg.data_table = db_mgt.data_table
+#cfg.regexes_table = db_mgt.regexes_table
+#cfg.session = db_mgt.session
+#process_args(args)
 
 fl.config.c.logger.info("Starting ORM version")
-fl.config.c.db_manager = fl.db_manager.DatabaseManager(database_url + '_new')
+fl.config.c.db_manager = fl.db_manager.DatabaseManager(database_url)
 
 # TODO - To put in args
 # TODO - Use agnostic path system

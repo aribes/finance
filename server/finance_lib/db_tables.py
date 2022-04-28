@@ -32,4 +32,4 @@ class Categoriser(Base):
   category = Column(String)
 
   def __repr__(self):
-    return f"Categoriser(id={self.id!r}, regex={self.regex!r}, category={self.category!r}"
+    return f"Categoriser(id={self.id!r}, regex={self.regex!r}, category={self.category!r})"

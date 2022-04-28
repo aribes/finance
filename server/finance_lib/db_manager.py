@@ -40,3 +40,21 @@ class DatabaseManager:
 
       session.add_all(records_to_add)
       session.commit()
+      
+  def add_categoriser(self, regex, category):
+
+    with Session(config.c.engine) as session:
+      
+      categoriser = db_tables.Categoriser(
+        regex=regex,
+        category=category)
+      
+      filtered = session.query(db_tables.Categoriser).filter_by(
+        regex=regex,
+        category=category).first()
+
+      if filtered is None:
+        config.c.logger.info(f"Adding new categoriser in the database: {categoriser!r}")
+        session.add(categoriser)
+        
+      session.commit()

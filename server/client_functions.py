@@ -6,6 +6,7 @@ import logging
 from finance_lib import *
 from finance_lib import config
 from finance_lib import csv
+from finance_lib import regexes
 
 
 def init_arg_parser():
@@ -33,6 +34,7 @@ def init_arg_parser():
   parser.add_argument("--display_categories", help="Display categories", action="store_true")
   parser.add_argument("--display_category", help="Display category")
   parser.add_argument("--list_categories", help="List Categories", action="store_true")
+  parser.add_argument("--list_regexes", help="List Regexes", action="store_true")
 
   return parser
 
@@ -81,3 +83,12 @@ def run(args):
       config.c.db_manager.add_bank_records(df)
     else:
       return
+
+  if args.regex_category and args.regex_definition:
+    if not regexes.check_regex(args.regex_definition, args.regex_category):
+      return
+    if args.test_regex:
+      regexes.run_regex(args.regex_definition, args.regex_category, False)
+    elif args.apply_regex:
+      regexes.run_regex(args.regex_definition, args.regex_category, True)
+      config.c.db_manager.add_categoriser(args.regex_definition, args.regex_category)
