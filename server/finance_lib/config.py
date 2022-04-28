@@ -15,11 +15,12 @@ class config:
     def init_logging(self):
         self.logger = logging.getLogger("App")
         self.logger.setLevel(logging.DEBUG)
+        console_handler = logging.StreamHandler()
+        self.logger.addHandler(console_handler)
 
     def load_config_file(self, config_file):
         with open(config_file) as f:
             self.user_configs = yaml.load(f, Loader=yaml.FullLoader)
-            print(self.user_configs)
         pass
 
     def is_category_defined(self, category):

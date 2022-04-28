@@ -4,10 +4,10 @@ from . import db_tables
 from . import config
 
 
-def check_regex(regex, category):
+def check_categoriser(regex, category):
 
   if category == '':
-    config.c.logger.warn(f'Category is empty for regex {regex!r}')
+    config.c.logger.warn(f'Category is empty for categoriser {regex!r}')
     return False
 
   if not config.c.is_category_defined(category):
@@ -17,18 +17,18 @@ def check_regex(regex, category):
   try:
     re.compile(regex)
   except Exception as e:
-    config.c.logger.warn(f'Regex does not compile {e!r}')
+    config.c.logger.warn(f'Categoriser does not compile {e!r}')
     return False
 
   return True
 
 
-def run_regex(regex, category, apply_changes):
+def run_categoriser(regex, category, apply_changes):
   p = re.compile(regex)
   with Session(config.c.engine) as session:
     for bankRecord in session.query(db_tables.BankRecord):
       if p.match(bankRecord.description):
         bankRecord.categories = category
-        config.c.logger.info(f'Changed categaory of {bankRecord!r}')
+        config.c.logger.info(f'Changed category of {bankRecord!r}')
     if apply_changes:
       session.commit()

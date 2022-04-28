@@ -10,4 +10,4 @@ from . import db_manager
 from . import db_tables
 from . import config
 from . import csv
-from . import regexes
+from . import categoriser

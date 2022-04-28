@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from client_functions import init_arg_parser, process_args, run
+from client_functions import init_arg_parser, run
 import finance_lib as fl
 
 
@@ -20,13 +20,6 @@ if args.db:
 
 # Using Sqlite by default
 database_url = 'sqlite:///' + db_filename
-
-#db_mgt = fl.db.db_manager(database_url)
-#cfg.db_connection = db_mgt.engine.connect()
-#cfg.data_table = db_mgt.data_table
-#cfg.regexes_table = db_mgt.regexes_table
-#cfg.session = db_mgt.session
-#process_args(args)
 
 fl.config.c.logger.info("Starting ORM version")
 fl.config.c.db_manager = fl.db_manager.DatabaseManager(database_url)
