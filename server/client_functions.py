@@ -27,6 +27,8 @@ def init_arg_parser():
   parser.add_argument("--test", help="Test New Regex", action="store_true")
   parser.add_argument("--apply", help="Apply New Regex", action="store_true")
   parser.add_argument("--reapply_categorisers", help="ReApply All Categorisers", action="store_true")
+  parser.add_argument("--export_categorisers", help="Export Categorisers")
+  parser.add_argument("--import_categorisers", help="Import Categorisers")
 
   # Statistics
   parser.add_argument("--stats", help="Compute and Show statistics", action="store_true")
@@ -91,3 +93,8 @@ def run(args):
     elif args.apply:
       categoriser.run_categoriser(args.categoriser_regex, args.categoriser_category, True)
       config.c.db_manager.add_categoriser(args.categoriser_regex, args.categoriser_category)
+
+  if args.export_categorisers:
+    config.c.db_manager.export_categorisers(args.export_categorisers)
+  if args.import_categorisers:
+    config.c.db_manager.import_categorisers(args.import_categorisers)

@@ -13,20 +13,9 @@ cfg = fl.utils_cfg.cfg
 # if cfg.wanted_year:
 #   logging.info("Selected date Y:{} M:{} D:{}".format(cfg.wanted_year, cfg.wanted_month, cfg.wanted_day))
 
-# Load / Init load DB
-db_filename = "bank_australia.db"
-if args.db:
-  db_filename = args.db
-
-# Using Sqlite by default
-database_url = 'sqlite:///' + db_filename
-
+fl.config.c.load_config_files()
 fl.config.c.logger.info("Starting ORM version")
-fl.config.c.db_manager = fl.db_manager.DatabaseManager(database_url)
+fl.config.c.db_manager = fl.db_manager.DatabaseManager(fl.config.c.get_database_url())
 
-# TODO - To put in args
-# TODO - Use agnostic path system
-configuration_file = '../config/categories.yaml'
-fl.config.c.load_config_file(configuration_file)
 
 run(args)

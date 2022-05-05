@@ -23,3 +23,12 @@ Ideas / Principles
   ☐ We should be always able to recreate the data by using:
     ☐ The regex table
     ☐ The custom table
+
+
+
+Next TODO:
+
+0. Reapply all regexes function
+1. Show Stats Correctly
+2. Add all regexes known
+4. Update CSV for April

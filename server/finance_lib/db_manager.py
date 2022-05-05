@@ -1,3 +1,4 @@
+import pandas as pd
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from . import db_tables
@@ -8,7 +9,8 @@ class DatabaseManager:
 
   def __init__(self, db_url, echo=False):
     config.c.engine = create_engine(db_url, echo=echo, future=True)
-
+    config.c.engine_1_4 = create_engine(db_url, echo=echo, future=False)
+ 
     # This will not recreate the tables it they already exists
     db_tables.Base.metadata.create_all(config.c.engine)
 
@@ -58,3 +60,14 @@ class DatabaseManager:
         session.add(categoriser)
         
       session.commit()
+
+  def export_categorisers(self, csv_filename):
+    config.c.logger.info('Export categorisers to a CSV file: {}'.format(csv_filename))
+    with Session(config.c.engine_1_4) as session:
+      df = pd.read_sql(session.query(db_tables.Categoriser).statement, session.bind)
+      df.to_csv(csv_filename, index=False, sep=";")
+
+  def import_categorisers(self, csv_filename):
+    config.c.logger.info('Import categorisers from a CSV file: {}'.format(csv_filename))
+    df = pd.read_csv(csv_filename, sep=";")
+    df.to_sql(db_tables.Categoriser.__tablename__, con=config.c.engine_1_4, if_exists='replace', index=False)
