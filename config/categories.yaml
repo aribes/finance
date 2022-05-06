@@ -7,18 +7,24 @@ salaire:
   - optiver
 abonnements:
   - youtube
+  - amazon prime
 credit:
-  - maison
+  - credit maison
 courses:
   - coles
   - grocery
   - aldi
   - harris farm
+santé:
+  - pharmacie
+  - docteur
 divers:
   - poste
+  - amazon
+  - kmart
 voiture:
   - parking
 enfant:
-  - compte commun enfants
+  - cc enfants
 maison:
   - entretien

@@ -7,6 +7,7 @@ from finance_lib import *
 from finance_lib import config
 from finance_lib import csv
 from finance_lib import categoriser
+from finance_lib import utils_term_ouput
 
 
 def init_arg_parser():
@@ -32,9 +33,6 @@ def init_arg_parser():
 
   # Statistics
   parser.add_argument("--stats", help="Compute and Show statistics", action="store_true")
-  parser.add_argument("--display_categories", help="Display categories", action="store_true")
-  parser.add_argument("--display_category", help="Display category")
-  parser.add_argument("--list_categories", help="List Categories", action="store_true")
   parser.add_argument("--list_categorisers", help="List Regexes", action="store_true")
 
   return parser
@@ -98,3 +96,5 @@ def run(args):
     config.c.db_manager.export_categorisers(args.export_categorisers)
   if args.import_categorisers:
     config.c.db_manager.import_categorisers(args.import_categorisers)
+  if args.list_categorisers:
+    utils_term_ouput.show_categorisers()

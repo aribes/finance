@@ -1,4 +1,8 @@
 from . import utils
+from . import config
+from . import db_tables
+
+from sqlalchemy.orm import Session
 
 def nicePrt(x):
   print('[',x.date,'] ', x.description, ' (', x.amount, ')')
@@ -37,3 +41,9 @@ def show_statistics():
     print('Restant:', month_stats['restant'])
     print()
     print('----------------')
+
+
+def show_categorisers():
+  with Session(config.c.engine) as session:
+    for categoriser in session.query(db_tables.Categoriser).order_by(db_tables.Categoriser.category):
+      print('| Category: {: <15} || Regex: {: <40} || Id: {: <5} |'.format(categoriser.category, categoriser.regex, categoriser.id))

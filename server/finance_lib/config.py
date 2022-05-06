@@ -43,8 +43,7 @@ class config:
         return database_url
 
     def is_category_defined(self, category):
-        categories = self.user_categories['categories']
-        values = sum(list(categories.values()), []) + list(categories.keys())
+        values = sum(list(self.user_categories.values()), []) + list(self.user_categories.keys())
         return category in values
 
 
