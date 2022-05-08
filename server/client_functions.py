@@ -36,46 +36,15 @@ def init_arg_parser():
   parser.add_argument("--reapply_categorisers", help="ReApply All Categorisers", action="store_true")
   parser.add_argument("--export_categorisers", help="Export Categorisers")
   parser.add_argument("--import_categorisers", help="Import Categorisers")
+  parser.add_argument("--list_categorisers", help="List Regexes", action="store_true")
 
   # Statistics
   parser.add_argument("--stats", help="Compute and Show statistics", action="store_true")
   parser.add_argument("--details", help="Compute and Show statistics with more details", action="store_true")
-  parser.add_argument("--list_categorisers", help="List Regexes", action="store_true")
+  parser.add_argument("--display_categories", help="Display Categories", action="store_true")
+  parser.add_argument("--display_category", help="Display Category (grouped)")
 
   return parser
-
-
-# TODO - We need to apply a filter from dates provided by the user
-# def process_args(args):
-  
-#   if args.add_csv:
-#     logging.info('Adding CSV file to the database: {}'.format(args.add_csv))
-#     pd = utils_csv.import_csv_file(args.add_csv, args.csv_version)
-#     utils_csv.add_pd_to_db(pd)
-
-#   if args.test_regex and args.regex_category and args.regex_definition:
-#     logging.info("Testing regex cat: {} - def: {}".format(args.regex_category, args.regex_definition))
-#     utils_regex.run_regex(args.regex_definition, args.regex_category, apply=False)
-
-#   if args.apply_regex and args.regex_category and args.regex_definition:
-#     logging.info("Applying and adding regex cat: {} - def: {}".format(args.regex_category, args.regex_definition))
-#     utils_regex.run_regex(args.regex_definition, args.regex_category, apply=True)
-
-#   if args.apply_regexes:
-#     utils_regex.apply_regexes_to_data()
-
-#   if args.apply_custom:
-#     utils_regex.apply_custom_regex()
-
-
-#   if args.list_categories:
-#     utils_term_ouput.show_categories()
-
-#   if args.display_categories:
-#     utils_term_ouput.show_categories_content()
-
-#   if args.display_category:
-#     utils_term_ouput.show_category_content(args.display_category)
 
 
 def run(args):
@@ -119,3 +88,9 @@ def run(args):
 
   elif args.stats:
     utils_term_ouput.show_statistics(not args.details)
+
+  elif args.display_categories:
+    utils_term_ouput.show_categories_content()
+
+  elif args.display_category:
+    utils_term_ouput.show_category_content(args.display_category, True)

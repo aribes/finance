@@ -13,14 +13,20 @@ def show_categories():
     print(cat)
 
 def show_categories_content():
-  show_category_content(None)
+  show_category_content(None, True)
 
-def show_category_content(category):
+def show_category_content(category, to_group):
   df = utils.get_data()
   groups = df.groupby(['categories'])
   for name, group in groups:
-    if category and name != category:
+
+    to_check = name 
+    if to_group:
+      # Change category
+      to_check = config.c.user_categories_rev[name]
+    if category and to_check != category:
       continue
+    
     print('----------------')
     print('Category:', name)
     print()
@@ -38,6 +44,7 @@ def show_statistics(group):
     print()
     print('Credit:',  month_stats['credit'])
     print('Debit:',   month_stats['debit'])
+    print()
     print('Restant:', month_stats['restant'])
     print()
     print('----------------')

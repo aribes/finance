@@ -30,8 +30,6 @@ def get_statistics(group_categories):
     if group_categories:
       # Change category
       group['categories'] = group['categories'].apply(lambda category : config.c.user_categories_rev[category])
-      
-      
 
     data_per_category = group.groupby(['categories']).agg({'amount': sum})
     credit  = group[group.amount > 0.0].amount.sum()
