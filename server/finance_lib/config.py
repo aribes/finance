@@ -10,8 +10,9 @@ class config:
         self.engine_1_4 = None
         self.db_manager = None
         self.date_format = '%Y-%m-%d'
-        self.user_categories = {}
-        self.user_bank_files = {}
+        self.user_categories     = {}
+        self.user_categories_rev = {}
+        self.user_bank_files     = {}
         self.init_logging()
 
     def init_logging(self):
@@ -26,6 +27,10 @@ class config:
         bank_file = os.path.join(os.path.dirname(__file__), '..', '..', 'config', 'bank_files.yaml')
         with open(categories_file) as f:
             self.user_categories = yaml.load(f, Loader=yaml.FullLoader)
+            for k, values in self.user_categories.items():
+                for v in values:
+                    self.user_categories_rev[v] = k
+                    
         with open(bank_file) as f:
             self.user_bank_files = yaml.load(f, Loader=yaml.FullLoader)
         pass

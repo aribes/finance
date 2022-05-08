@@ -18,15 +18,20 @@ def get_categories():
   df = get_data()
   return df.category.unique()
 
-def get_statistics():
+def get_statistics(group_categories):
   statistics = []
   df = get_data()
-  df = df[df.categories != 'Exclude']
 
   # Detect year/months and print for each one
   df['date_filter'] = df.date.apply(lambda x : x[:-3])
   df_groups_date = df.groupby(['date_filter'])
   for name, group in df_groups_date:
+
+    if group_categories:
+      # Change category
+      group['categories'] = group['categories'].apply(lambda category : config.c.user_categories_rev[category])
+      
+      
 
     data_per_category = group.groupby(['categories']).agg({'amount': sum})
     credit  = group[group.amount > 0.0].amount.sum()

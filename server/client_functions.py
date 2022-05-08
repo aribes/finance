@@ -39,6 +39,7 @@ def init_arg_parser():
 
   # Statistics
   parser.add_argument("--stats", help="Compute and Show statistics", action="store_true")
+  parser.add_argument("--details", help="Compute and Show statistics with more details", action="store_true")
   parser.add_argument("--list_categorisers", help="List Regexes", action="store_true")
 
   return parser
@@ -117,4 +118,4 @@ def run(args):
     utils_term_ouput.show_categorisers()
 
   elif args.stats:
-    utils_term_ouput.show_statistics()
+    utils_term_ouput.show_statistics(not args.details)

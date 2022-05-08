@@ -18,13 +18,21 @@ courses:
 santé:
   - pharmacie
   - docteur
+  - dentiste
+achats:
+  - amazon
 divers:
   - poste
-  - amazon
   - kmart
+  - opal
+  - divers
+golf:
+  - golf
 voiture:
   - parking
 enfant:
   - cc enfants
+  - divers enfants
 maison:
   - entretien
+  - energie

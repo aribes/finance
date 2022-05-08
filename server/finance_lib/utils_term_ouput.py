@@ -28,8 +28,8 @@ def show_category_content(category):
     print('----------------')
     print()
 
-def show_statistics():
-  statistics = utils.get_statistics()
+def show_statistics(group):
+  statistics = utils.get_statistics(group)
 
   for month_stats in statistics:
     print('----------------')
