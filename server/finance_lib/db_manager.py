@@ -1,6 +1,7 @@
 import pandas as pd
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 from . import db_tables
 from . import config
 
@@ -46,8 +47,14 @@ class DatabaseManager:
   def add_categoriser(self, regex, category):
 
     with Session(config.c.engine) as session:
-      
+
+      row_id = session.query(func.max(db_tables.Categoriser.id)).one()
+      id = 1
+      if row_id is not None:
+        id = row_id[0] + 1
+
       categoriser = db_tables.Categoriser(
+        id=id,
         regex=regex,
         category=category)
       
@@ -59,6 +66,25 @@ class DatabaseManager:
         config.c.logger.info(f"Adding new categoriser in the database: {categoriser!r}")
         session.add(categoriser)
         
+      session.commit()
+
+  def delete_categoriser(self, id):
+
+    with Session(config.c.engine) as session:
+      to_delete = session.get(db_tables.Categoriser, id)
+      if to_delete is None:
+        return
+      session.delete(to_delete)
+      session.commit()
+
+  def update_categoriser(self, id, regex, category):
+
+    with Session(config.c.engine) as session:
+      to_update = session.get(db_tables.Categoriser, id)
+      if to_update is None:
+        return
+      to_update.regex = regex
+      to_update.category = category
       session.commit()
 
   def export_categorisers(self, csv_filename):

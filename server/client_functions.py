@@ -25,8 +25,11 @@ def init_arg_parser():
   # Categoriser arguments
   parser.add_argument("--categoriser_regex", help="New Regex Category")
   parser.add_argument("--categoriser_category", help="New Regex Definition")
+  parser.add_argument("--id", help="Categoriser Id", type=int)
   parser.add_argument("--test", help="Test New Regex", action="store_true")
-  parser.add_argument("--apply", help="Apply New Regex", action="store_true")
+  parser.add_argument("--add", help="Add and Apply New Regex", action="store_true")
+  parser.add_argument("--update", help="Update Categoriser", action="store_true")
+  parser.add_argument("--delete", help="Delete Categoriser", action="store_true")
   parser.add_argument("--reapply_categorisers", help="ReApply All Categorisers", action="store_true")
   parser.add_argument("--export_categorisers", help="Export Categorisers")
   parser.add_argument("--import_categorisers", help="Import Categorisers")
@@ -83,18 +86,26 @@ def run(args):
     else:
       return
 
-  if args.categoriser_regex and args.categoriser_category:
+  if args.id:
+    if args.delete:
+      config.c.db_manager.delete_categoriser(args.id)
+    elif args.update and args.categoriser_regex and args.categoriser_category:
+      if not categoriser.check_categoriser(args.categoriser_regex, args.categoriser_category):
+        return
+      config.c.db_manager.update_categoriser(args.id, args.categoriser_regex, args.categoriser_category)
+
+  elif args.categoriser_regex and args.categoriser_category:
     if not categoriser.check_categoriser(args.categoriser_regex, args.categoriser_category):
       return
     if args.test:
       categoriser.run_categoriser(args.categoriser_regex, args.categoriser_category, False)
-    elif args.apply:
+    elif args.add:
       categoriser.run_categoriser(args.categoriser_regex, args.categoriser_category, True)
       config.c.db_manager.add_categoriser(args.categoriser_regex, args.categoriser_category)
 
-  if args.export_categorisers:
+  elif args.export_categorisers:
     config.c.db_manager.export_categorisers(args.export_categorisers)
-  if args.import_categorisers:
+  elif args.import_categorisers:
     config.c.db_manager.import_categorisers(args.import_categorisers)
-  if args.list_categorisers:
+  elif args.list_categorisers:
     utils_term_ouput.show_categorisers()
