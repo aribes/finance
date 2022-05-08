@@ -17,7 +17,7 @@ def show_categories_content():
 
 def show_category_content(category):
   df = utils.get_data()
-  groups = df.groupby(['category'])
+  groups = df.groupby(['categories'])
   for name, group in groups:
     if category and name != category:
       continue

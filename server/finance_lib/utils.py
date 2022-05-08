@@ -2,24 +2,17 @@ import sys
 import re
 import pandas
 
+from sqlalchemy.orm import Session
+from . import db_tables
+from . import config
+
 from . import utils_cfg
 cfg = utils_cfg.cfg
 
-# Checking if Table exists, if not create it
-def init_db():
-  cfg.db_connection.execute('CREATE TABLE IF NOT EXISTS raw (date TEXT, amount REAL, description TEXT, acc_amount REAL, bank_category TEXT, username TEXT, category TEXT)')
-  cfg.db_connection.execute('CREATE TABLE IF NOT EXISTS custom (date TEXT, amount REAL, description TEXT, acc_amount REAL, bank_category TEXT, username TEXT, category TEXT)')
-  cfg.db_connection.execute('CREATE TABLE IF NOT EXISTS regex (regex TEXT, category TEXT)')
-  cfg.db_connection.commit()
-
-def get_regexes():
-  regexes = cfg.db_connection.execute('SELECT * FROM regexes')
-  return regexes.fetchall()
-
 def get_data():
-  all_raws = cfg.db_connection.execute('SELECT * FROM data')
-  df = pandas.DataFrame(all_raws.fetchall(), columns=['date', 'amount', 'acc_amount', 'description', 'bank_category', 'username', 'category'])
-  return cfg.filter(df)
+  with Session(config.c.engine_1_4) as session:
+    df = pandas.read_sql(session.query(db_tables.BankRecord).statement, session.bind)
+    return df
 
 def get_categories():
   df = get_data()
@@ -28,14 +21,14 @@ def get_categories():
 def get_statistics():
   statistics = []
   df = get_data()
-  df = df[df.category != 'Exclude']
+  df = df[df.categories != 'Exclude']
 
   # Detect year/months and print for each one
   df['date_filter'] = df.date.apply(lambda x : x[:-3])
   df_groups_date = df.groupby(['date_filter'])
   for name, group in df_groups_date:
 
-    data_per_category = group.groupby(['category']).agg({'amount': sum})
+    data_per_category = group.groupby(['categories']).agg({'amount': sum})
     credit  = group[group.amount > 0.0].amount.sum()
     debit   = group[group.amount <= 0.0].amount.sum()
     restant = credit + debit

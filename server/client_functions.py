@@ -66,8 +66,6 @@ def init_arg_parser():
 #   if args.apply_custom:
 #     utils_regex.apply_custom_regex()
 
-#   if args.stats:
-#     utils_term_ouput.show_statistics()
 
 #   if args.list_categories:
 #     utils_term_ouput.show_categories()
@@ -117,3 +115,6 @@ def run(args):
     config.c.db_manager.import_categorisers(args.import_categorisers)
   elif args.list_categorisers:
     utils_term_ouput.show_categorisers()
+
+  elif args.stats:
+    utils_term_ouput.show_statistics()
