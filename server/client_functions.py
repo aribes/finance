@@ -8,6 +8,9 @@ from finance_lib import config
 from finance_lib import csv
 from finance_lib import categoriser
 from finance_lib import utils_term_ouput
+from finance_lib import db_tables
+
+from sqlalchemy.orm import Session
 
 
 def init_arg_parser():
@@ -103,6 +106,11 @@ def run(args):
       categoriser.run_categoriser(args.categoriser_regex, args.categoriser_category, True)
       config.c.db_manager.add_categoriser(args.categoriser_regex, args.categoriser_category)
 
+  elif args.reapply_categorisers:
+    with Session(config.c.engine) as session:
+      for cat in session.query(db_tables.Categoriser).all():
+        categoriser.run_categoriser(cat.regex, cat.category, True)
+        
   elif args.export_categorisers:
     config.c.db_manager.export_categorisers(args.export_categorisers)
   elif args.import_categorisers:

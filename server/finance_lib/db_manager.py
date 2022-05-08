@@ -16,7 +16,6 @@ class DatabaseManager:
     db_tables.Base.metadata.create_all(config.c.engine)
 
   def add_bank_records(self, df):
-
     with Session(config.c.engine) as session:
 
       records_to_add = []
@@ -45,7 +44,6 @@ class DatabaseManager:
       session.commit()
       
   def add_categoriser(self, regex, category):
-
     with Session(config.c.engine) as session:
 
       row_id = session.query(func.max(db_tables.Categoriser.id)).one()
@@ -69,7 +67,6 @@ class DatabaseManager:
       session.commit()
 
   def delete_categoriser(self, id):
-
     with Session(config.c.engine) as session:
       to_delete = session.get(db_tables.Categoriser, id)
       if to_delete is None:
@@ -78,7 +75,6 @@ class DatabaseManager:
       session.commit()
 
   def update_categoriser(self, id, regex, category):
-
     with Session(config.c.engine) as session:
       to_update = session.get(db_tables.Categoriser, id)
       if to_update is None:
